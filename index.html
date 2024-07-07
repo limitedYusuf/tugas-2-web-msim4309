@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Tugas 2</title>
+      <!-- Icon CDN -->
+      <link rel="stylesheet"
+         href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/1.35.0/iconfont/tabler-icons.min.css"
+         integrity="sha512-tpsEzNMLQS7w9imFSjbEOHdZav3/aObSESAL1y5jyJDoICFF2YwEdAHOPdOr1t+h8hTzar0flphxR76pd0V1zQ=="
+         crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <!-- Animate CDN -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+         integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw=="
+         crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <!-- Tailwind CDN -->
+      <script src="https://cdn.tailwindcss.com"></script>
+
+      <style>
+         @import url('https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap');
+
+         /* Set Default */
+         body {
+            font-family: "Poetsen One", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            overflow: hidden;
+         }
+
+         .orangeFont {
+            color: #FF9900;
+         }
+      </style>
+   </head>
+
+   <body class="flex justify-center items-center">
+
+      <div id="app">
+         <div
+            :class="{'bg-yellow-100' : greeting === 'pagi' || greeting === 'siang', 'bg-white dark:bg-gray-700' : greeting === 'sore', 'bg-gray-700' : greeting === 'malam'}"
+            class="text-center h-screen w-screen flex justify-center items-center">
+
+            <div class="content">
+               <!-- Kondisi sesuai variable greeting -->
+               <div v-if="greeting === 'pagi' || greeting === 'siang'"
+                  class="text-yellow-300 animate__animated animate__rotateIn animate__infinite">
+                  <span class="text-9xl ti ti-sun"></span>
+               </div>
+               <div v-else-if="greeting === 'sore'"
+                  class="text-yellow-600 animate__animated animate__heartBeat animate__infinite">
+                  <span class="text-9xl ti ti-sun"></span>
+                  <span class="text-4xl ti ti-cloud"></span>
+               </div>
+               <div v-else-if="greeting === 'malam'"
+                  class="text-gray-500 animate__animated animate__heartBeat animate__infinite">
+                  <span class="text-9xl ti ti-moon"></span>
+               </div>
+               <p class="text-2xl orangeFont">
+                  Selamat {{ greeting }} Pak {{ tutorName }} (tutor)<br>
+                  Ini adalah tugas kedua saya ({{ mahasiswaName }} - {{ nim }})
+               </p>
+               <p class="text-xl">
+                  Sekarang jam
+                  <span class="text-purple-500">{{ time }}</span> dan tanggal
+                  <span class="text-purple-500">{{ date }}</span>
+               </p>
+            </div>
+
+         </div>
+      </div>
+
+      <!-- Vue CDN -->
+      <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+      <script>
+
+         const app = Vue.createApp({
+            el: '#app',
+            data() {
+               return {
+                  time: null,
+                  date: null,
+                  greeting: null,
+                  tutorName: 'Agus',
+                  mahasiswaName: 'Yusuf',
+                  nim: '0123456789',
+               }
+            },
+            mounted() {
+               // jalankan function saat page di load
+               this.refreshTime();
+               setInterval(this.refreshTime, 1000); // ubah setiap 1 detik
+            },
+            methods: {
+               refreshTime() {
+                  const currentDate = new Date();
+                  const hours = currentDate.getHours();
+                  const minutes = currentDate.getMinutes();
+                  const seconds = currentDate.getSeconds();
+
+                  const days = this.formatTime(currentDate.getDate());
+                  const months = this.formatTime(currentDate.getMonth() + 1);
+                  const years = currentDate.getFullYear();
+
+                  // Gabungkan value diatas ke variable time
+                  this.time = `${hours}:${minutes}:${seconds}`;
+
+                  // Gabungkan value diatas ke variable date
+                  this.date = `${days}/${months}/${years}`;
+
+                  // Cek kondisi hari berdasarkan jam
+                  this.checkGreeting(this.modeDeveloper('pagi') ?? hours);
+               },
+               formatTime(time) {
+                  // Jika dibawah jam 10 maka tambahkan angka 0 diawal
+                  return (time < 10 ? '0' : '') + time;
+               },
+               checkGreeting(hour) {
+                  if (hour < 12) {
+                     return this.greeting = 'pagi';
+                  } else if (hour < 15) {
+                     return this.greeting = 'siang';
+                  } else if (hour < 18) {
+                     return this.greeting = 'sore';
+                  } else {
+                     return this.greeting = 'malam';
+                  }
+               },
+               // karena saya mengerjakan malam hari, maka untuk memenuhi soal "selamat pagi". maka saya buat function untuk testing
+               modeDeveloper(day = null) {
+                  if (day == 'pagi') {
+                     return 11;
+                  } else if (day == 'siang') {
+                     return 14;
+                  } else if (day == 'sore') {
+                     return 17;
+                  } else {
+                     // malam
+                     return 20;
+                  }
+               }
+            },
+         });
+
+         app.mount('#app');
+      </script>
+   </body>
+
+</html>
